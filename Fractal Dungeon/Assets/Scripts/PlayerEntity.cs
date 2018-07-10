@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class PlayerEntity : MonoBehaviour {
 
-    private int roomIteration;
+
 }
