@@ -4,7 +4,7 @@ using UnityEngine;
 
 public struct PlayerRefs
 {
-    public Transform    transform;
+    public Transform    transform; 
     public PlayerEntity entity;
 }
 
@@ -21,6 +21,8 @@ public class GameController : MonoBehaviour {
     private void Awake()
     {
         InitializeGame();
+        PlayerEntity.OnPlayerScaleIncrement += OnPlayerScaleChange;
+        PlayerEntity.OnPlayerScaleDecrement += OnPlayerScaleChange;
     }
 
     private void Start()
@@ -38,6 +40,12 @@ public class GameController : MonoBehaviour {
 
     private void StartGame()
     {
+        
+    }
 
+    private void OnPlayerScaleChange()
+    {
+        //cameraController.UpdateTargets(roomManager.GetRoomRefs(playerRefs.entity.currentIteration).corners);
+        Debug.Log(roomManager.GetRoomRefs(0));
     }
 }
