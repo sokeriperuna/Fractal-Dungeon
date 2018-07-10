@@ -4,13 +4,20 @@ using UnityEngine;
 
 public class PlayerEntity : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    private Vector2 velocity;
+    private Rigidbody2D rb2D;
+
+    public float speed;
+
+    private void Awake()
+    {
+        rb2D = GetComponent<Rigidbody2D>();
+    }
+
+
+
+    public void MovePlayer(Vector2 input)
+    {
+        rb2D.MovePosition(rb2D.position + input.normalized * Time.fixedDeltaTime);
+    }
 }
