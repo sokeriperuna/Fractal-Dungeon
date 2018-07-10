@@ -1,8 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+<<<<<<< HEAD:Fractal Dungeon/Assets/Scripts/PlayerController.cs
 public class PlayerController : MonoBehaviour
 {
+=======
+public class CameraController : MonoBehaviour {
+>>>>>>> esko:Fractal Dungeon/Assets/Scripts/CameraController.cs
 
     private PlayerEntity player;
 
