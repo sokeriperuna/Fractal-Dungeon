@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerEntity : MonoBehaviour {
 
-    private Vector2 velocity;
     private Rigidbody2D rb2D;
 
     public float speed;
