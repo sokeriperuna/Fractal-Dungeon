@@ -45,7 +45,6 @@ public class GameController : MonoBehaviour {
 
     private void OnPlayerScaleChange()
     {
-        //cameraController.UpdateTargets(roomManager.GetRoomRefs(playerRefs.entity.currentIteration).corners);
-        Debug.Log(roomManager.GetRoomRefs(0));
+
     }
 }

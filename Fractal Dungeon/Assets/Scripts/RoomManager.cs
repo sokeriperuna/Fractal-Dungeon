@@ -24,17 +24,23 @@ public class RoomManager : MonoBehaviour {
 
     public Transform rooms;
 
+    public CameraController cameraController;
+
     List<RoomRefs> existingRooms;
 
     private void Awake()
     {
         existingRooms = new List<RoomRefs>();
+        PlayerEntity.OnPlayerScaleDecrement += OnPlayerScaleChange;
+        PlayerEntity.OnPlayerScaleIncrement += OnPlayerScaleChange;
     }
 
     private void Start()
     {
         for (int i = -1; i < 9; i++)
             SpawnNewRoom(i);
+
+        OnPlayerScaleChange();
     }
 
     private void SpawnNewRoom(int lastIteration)
@@ -53,10 +59,8 @@ public class RoomManager : MonoBehaviour {
         existingRooms[lastIteration + 1].transform      = tempObject.transform;
 
         for(int i = 0; i < 4; i++)
-        {
             existingRooms[lastIteration + 1].corners[i] = existingRooms[lastIteration + 1].transform.GetChild(0);
-            Debug.Log(existingRooms[lastIteration + 1].corners[i]);
-        }
+        
 
         existingRooms[lastIteration + 1].data.iteration = lastIteration + 1;
         if (lastIteration > -1)
@@ -73,21 +77,36 @@ public class RoomManager : MonoBehaviour {
 
     }
 
-    public RoomRefs GetRoomRefs(int index)
+    public Transform[] GetRoomCorners(int roomIteraton)
     {
-        if (index < 0 || index >= existingRooms.Count)
+        Debug.Log("Room Start");
+        if (roomIteraton < 0 || roomIteraton >= existingRooms.Count)
         {
-            Debug.LogError("Incorrect Index");
+            Debug.LogError("Incorrect iteration parameters");
             return null;
         }
-        return existingRooms[index];
+        else
+            foreach (Transform transform in existingRooms[roomIteraton].corners)
+                Debug.Log(transform);
+            return existingRooms[roomIteraton].corners;
+    }
+
+    public bool GetRoomCorner(int roomIndex, int cornerIndex, ref Transform outputCorner)
+    {
+        outputCorner = existingRooms[roomIndex].corners[cornerIndex];
+        return true;
+    }
+
+    private void OnPlayerScaleChange()
+    {
+        cameraController.UpdateTracking(existingRooms[PlayerEntity.currentIteration].transform, PlayerEntity.currentIteration);
     }
 
     public static double GetIterationScale(int iteration) {
         if (iteration == 0)
             return 1F;
         else
-            return (1F / (2F * iteration));
+            return Mathf.Pow(0.5f, iteration);
     }
 
 }

@@ -198,6 +198,7 @@ MonoBehaviour:
   roomLinker: {fileID: 0}
   roomSize: 10
   rooms: {fileID: 189045379}
+  cameraController: {fileID: 1210223456}
 --- !u!1 &1210223451
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,10 +292,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd62eea435aa674cacfabfefb8b7928, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1213319320}
-  boundingBoxPadding: 1
-  minimumOrthographicSize: 1.5
-  zoomSpeed: 10
+  currentTarget: {fileID: 189045379}
+  cameraSpeed: 0.5
 --- !u!1 &1213319318
 GameObject:
   m_ObjectHideFlags: 0
