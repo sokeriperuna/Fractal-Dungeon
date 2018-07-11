@@ -31,8 +31,8 @@ public class RoomManager : MonoBehaviour {
     private void Awake()
     {
         existingRooms = new List<RoomRefs>();
-        PlayerEntity.OnPlayerScaleDecrement += OnPlayerScaleChange;
-        PlayerEntity.OnPlayerScaleIncrement += OnPlayerScaleChange;
+        PlayerEntity.PlayerScaleDecrement += OnPlayerScaleChange;
+        PlayerEntity.PlayerScaleIncrement += OnPlayerScaleChange;
     }
 
     private void Start()

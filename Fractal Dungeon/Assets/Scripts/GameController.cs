@@ -21,8 +21,8 @@ public class GameController : MonoBehaviour {
     private void Awake()
     {
         InitializeGame();
-        PlayerEntity.OnPlayerScaleIncrement += OnPlayerScaleChange;
-        PlayerEntity.OnPlayerScaleDecrement += OnPlayerScaleChange;
+        PlayerEntity.PlayerScaleIncrement += OnPlayerScaleChange;
+        PlayerEntity.PlayerScaleDecrement += OnPlayerScaleChange;
     }
 
     private void Start()

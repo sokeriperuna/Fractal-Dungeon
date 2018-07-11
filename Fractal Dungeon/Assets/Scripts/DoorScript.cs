@@ -4,15 +4,46 @@ using UnityEngine;
 
 public class DoorScript : MonoBehaviour {
 
-    public DoorScript linkedDoor;
+    private DoorScript linkedDoor;
 
-    public Transform teleportdestination;
+    private Transform teleportDestination;
 
+    private int doorIteration = 0;
 
-    void OnTriggerEnter2D(Collider2D _c)
+    public delegate void DoorDelegate();
+    public static event DoorDelegate PlayerDecent;
+    public static event DoorDelegate PlayerAscent;
+
+    private void Awake()
     {
-        if (_c.tag == "Player")
-            Debug.Log("Teleport!!");
-            //transform.position = teleportdestination.position;
+        teleportDestination = transform.GetChild(0);
+    }
+
+    public void InitializeDoor(DoorScript newLink, int iteration)
+    {
+        linkedDoor    = newLink;
+        doorIteration = iteration;
+    }
+
+    public int Iteration { get { return doorIteration; } }
+
+    public Transform Destintaion { get { return teleportDestination; } }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+
+        if (other.CompareTag("Player"))
+            Debug.Log("TELEPORT.");
+
+        if (linkedDoor.Iteration > this.Iteration)
+            if (PlayerAscent != null)
+                PlayerAscent();
+
+        if (linkedDoor.Iteration < this.Iteration)
+            if (PlayerDecent != null)
+                PlayerDecent();
+
+
+            //other.transform.position = linkedDoor.teleportDestination.position;
     }
 } 

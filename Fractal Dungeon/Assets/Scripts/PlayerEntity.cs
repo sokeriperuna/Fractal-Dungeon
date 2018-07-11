@@ -13,8 +13,8 @@ public class PlayerEntity : MonoBehaviour {
     public static int currentIteration;
 
     public delegate void PlayerDelegate();
-    public static event PlayerDelegate OnPlayerScaleIncrement;
-    public static event PlayerDelegate OnPlayerScaleDecrement;
+    public static event PlayerDelegate PlayerScaleIncrement;
+    public static event PlayerDelegate PlayerScaleDecrement;
 
     private void Awake()
     {
@@ -28,23 +28,25 @@ public class PlayerEntity : MonoBehaviour {
         currentIteration = 0;
     }
 
-    private void Update()
+    void OnPlayerAscent()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-            UpdatePlayerScale(++currentIteration, true);
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-            UpdatePlayerScale(--currentIteration, false);
+        UpdatePlayerScale(currentIteration + 1, true);
+    }
+
+    void OnPlayerDescent()
+    {
+        UpdatePlayerScale(currentIteration - 1, false);
     }
 
     public void UpdatePlayerScale(int newIteration, bool incremented)
     {
         if (incremented)
-            if (OnPlayerScaleIncrement != null)
-                OnPlayerScaleIncrement();
+            if (PlayerScaleIncrement != null)
+                PlayerScaleIncrement();
 
         if (!incremented)
-            if (OnPlayerScaleDecrement != null)
-                OnPlayerScaleDecrement();
+            if (PlayerScaleDecrement != null)
+                PlayerScaleDecrement();
 
 
         currentIteration       = newIteration;
