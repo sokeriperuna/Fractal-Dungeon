@@ -97,7 +97,7 @@ public class RoomManager : MonoBehaviour {
         SpawnDoors(existingRooms[lastIteration + 1]);
 
         if (lastIteration >= 0)
-            LinkRooms(existingRooms[lastIteration], existingRooms[lastIteration]);
+            LinkRooms(existingRooms[lastIteration], existingRooms[lastIteration + 1]);
     }
 
     private void SpawnDoors(RoomRefs room)
@@ -162,17 +162,17 @@ public class RoomManager : MonoBehaviour {
 
     private void LinkDoors(DoorScript door1, DoorScript door2, RoomRefs room1, RoomRefs room2)
     {
-        door1.InitializeDoor(door1, room1.data.iteration);
-        door2.InitializeDoor(door2, room2.data.iteration);
+        door1.InitializeDoor(door2, room1.data.iteration);
+        door2.InitializeDoor(door1, room2.data.iteration);
     }
 
     private void LinkRooms(RoomRefs higherRoom, RoomRefs lowerRoom)
     {
-        foreach(Transform i in higherRoom.doorSpawnPointExits)
+        foreach (Transform i in higherRoom.doorSpawnPointExits)
             foreach(Transform j in i)
             {
-                int doorIndex = ArrayUtility.IndexOf<Transform>(lowerRoom.doorSpawnPointExits, i);
-                GameObject k = Instantiate(roomLinker, lowerRoom.doorSpawnPointExits[doorIndex].position, lowerRoom.doorSpawnPointExits[doorIndex].rotation, lowerRoom.doorSpawnPointExits[doorIndex]);
+                int doorIndex = ArrayUtility.IndexOf<Transform>(higherRoom.doorSpawnPointExits, i);
+                GameObject k  = Instantiate(roomLinker, lowerRoom.doorSpawnPointEntrances[doorIndex].position, lowerRoom.doorSpawnPointEntrances[doorIndex].rotation, lowerRoom.doorSpawnPointEntrances[doorIndex]);
                 LinkDoors(j.GetComponent<DoorScript>(), k.GetComponent<DoorScript>(), higherRoom, lowerRoom);
             }
 

@@ -6,19 +6,31 @@ public class DoorScript : MonoBehaviour {
 
     private DoorScript linkedDoor;
 
-    public Transform teleportDestination;
+    private Transform teleportDestination;
 
     private int doorIteration = 0;
+
+    private static bool playerHasTeleported = false;
+    
+    private static float doorAvailableNext = 0f;
+
+    public float cooldown = 1f;
     
     public delegate void DoorDelegate();
-    public static event  DoorDelegate PlayerDecent;
     public static event  DoorDelegate PlayerAscent;
+    public static event  DoorDelegate PlayerDescent;
 
     public void InitializeDoor(DoorScript newLink, int iteration)
     {
         linkedDoor          = newLink;
         doorIteration       = iteration;
         teleportDestination = newLink.transform.GetChild(0);
+    }
+
+    private void FixedUpdate()
+    {
+        if (playerHasTeleported)
+            playerHasTeleported = false;
     }
 
     public int Iteration { get { return doorIteration; } }
@@ -28,18 +40,31 @@ public class DoorScript : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D other)
     {
 
-        if (other.CompareTag("Player"))
-            other.transform.position = teleportDestination.position;
+        if (doorAvailableNext <= Time.time && !playerHasTeleported)
+        {
+            if (linkedDoor.Iteration > this.Iteration)
+            {
+                if (PlayerAscent != null)
+                {
+                    PlayerAscent();
+                }
+            }
 
-        if (linkedDoor.Iteration > this.Iteration)
-            if (PlayerAscent != null)
-                PlayerAscent();
+            if (linkedDoor.Iteration < this.Iteration)
+            {
+                if (PlayerDescent != null)
+                {
+                    PlayerDescent();
+                }
+            }
 
-        if (linkedDoor.Iteration < this.Iteration)
-            if (PlayerDecent != null)
-                PlayerDecent();
 
 
-            //other.transform.position = linkedDoor.teleportDestination.position;
+            if (other.CompareTag("Player"))
+                other.transform.position = teleportDestination.position;
+            doorAvailableNext = Time.time + cooldown;
+            playerHasTeleported = true;
+        }
+
     }
 } 

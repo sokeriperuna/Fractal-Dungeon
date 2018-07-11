@@ -21,6 +21,8 @@ public class PlayerEntity : MonoBehaviour {
         rb2D = GetComponent<Rigidbody2D>();
         currentIteration = 0;
         scaledSpeed      = speed;
+        DoorScript.PlayerAscent  += OnPlayerAscent;
+        DoorScript.PlayerDescent += OnPlayerDescent;
     }
 
     private void Start()
