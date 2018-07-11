@@ -33,7 +33,9 @@ public class DoorScript : MonoBehaviour {
     {
 
         if (other.CompareTag("Player"))
-            Debug.Log("TELEPORT.");
+        {
+            other.transform.position = teleportDestination.position;
+        }
 
         if (linkedDoor.Iteration > this.Iteration)
             if (PlayerAscent != null)

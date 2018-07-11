@@ -77,8 +77,10 @@ public class RoomManager : MonoBehaviour {
         for(int i = 0; i < 4; i++)
         {
             existingRooms[lastIteration + 1].corners[i] = existingRooms[lastIteration + 1].transform.GetChild(0).GetChild(i);
-            existingRooms[lastIteration + 1].doorSpawnPointEntrances[i] = existingRooms[lastIteration + 1].transform.GetChild(1).GetChild(i);
-            existingRooms[lastIteration + 1].doorSpawnPointEntrances[i] = existingRooms[lastIteration + 1].transform.GetChild(1).GetChild(i); // FIX
+
+            existingRooms[lastIteration + 1].doorSpawnPointEntrances[i] = existingRooms[lastIteration + 1].transform.GetChild(1).GetChild(0).GetChild(i);
+            existingRooms[lastIteration + 1].doorSpawnPointExits[i]     = existingRooms[lastIteration + 1].transform.GetChild(1).GetChild(1).GetChild(i); // FIX
+            existingRooms[lastIteration + 1].doorSpawnPointLinks[i]     = existingRooms[lastIteration + 1].transform.GetChild(1).GetChild(2).GetChild(i); // FIX
         }
 
 
@@ -107,29 +109,30 @@ public class RoomManager : MonoBehaviour {
         GameObject spawnedDoor2;
 
         if (randomResult == 1)
-            spawnedDoor1 = Instantiate(roomLinker, room.doorSpawnPointExits[(int)DOOR_SPAWN_ENTRANCE.AX]);
+            spawnedDoor1 = Instantiate(roomLinker, room.doorSpawnPointExits[(int)DOOR_SPAWN_ENTRANCE.AX].position, room.doorSpawnPointExits[(int)DOOR_SPAWN_ENTRANCE.AX].rotation, room.doorSpawnPointExits[(int)DOOR_SPAWN_ENTRANCE.AX]);
         else
-            spawnedDoor1 = Instantiate(roomLinker, room.doorSpawnPointExits[(int)DOOR_SPAWN_ENTRANCE.BX]);
+            spawnedDoor1 = Instantiate(roomLinker, room.doorSpawnPointExits[(int)DOOR_SPAWN_ENTRANCE.BX].position, room.doorSpawnPointExits[(int)DOOR_SPAWN_ENTRANCE.BX].rotation, room.doorSpawnPointExits[(int)DOOR_SPAWN_ENTRANCE.BX]);
 
         randomResult = Random.Range(0, 2);
 
         if (randomResult == 1)
-            spawnedDoor1 = Instantiate(roomLinker, room.doorSpawnPointExits[(int)DOOR_SPAWN_ENTRANCE.XB]);
+            spawnedDoor1 = Instantiate(roomLinker, room.doorSpawnPointExits[(int)DOOR_SPAWN_ENTRANCE.XB].position, room.doorSpawnPointExits[(int)DOOR_SPAWN_ENTRANCE.XB].rotation, room.doorSpawnPointExits[(int)DOOR_SPAWN_ENTRANCE.XB]);
         else
-            spawnedDoor1 = Instantiate(roomLinker, room.doorSpawnPointExits[(int)DOOR_SPAWN_ENTRANCE.YB]);
+            spawnedDoor1 = Instantiate(roomLinker, room.doorSpawnPointExits[(int)DOOR_SPAWN_ENTRANCE.YB].position, room.doorSpawnPointExits[(int)DOOR_SPAWN_ENTRANCE.YB].rotation, room.doorSpawnPointExits[(int)DOOR_SPAWN_ENTRANCE.YB]);
+
 
         // SPAWNING MIDDLE DOORS
 
         if (randomResult == 1)
         {
-            spawnedDoor1 = Instantiate(roomLinker, room.doorSpawnPointLinks[(int)DOOR_SPAWN_MIDDLE.AB1]);
-            spawnedDoor2 = Instantiate(roomLinker, room.doorSpawnPointLinks[(int)DOOR_SPAWN_MIDDLE.AB2]);
-            LinkDoors (spawnedDoor1.GetComponent<DoorScript>(), spawnedDoor2.GetComponent<DoorScript>(), room);
+            spawnedDoor1 = Instantiate(roomLinker, room.doorSpawnPointLinks[(int)DOOR_SPAWN_MIDDLE.AB1].position, room.doorSpawnPointLinks[(int)DOOR_SPAWN_MIDDLE.AB1].rotation, room.doorSpawnPointLinks[(int)DOOR_SPAWN_MIDDLE.AB1]);
+            spawnedDoor2 = Instantiate(roomLinker, room.doorSpawnPointLinks[(int)DOOR_SPAWN_MIDDLE.AB2].position, room.doorSpawnPointLinks[(int)DOOR_SPAWN_MIDDLE.AB2].rotation, room.doorSpawnPointLinks[(int)DOOR_SPAWN_MIDDLE.AB2]);
+            LinkDoors(spawnedDoor1.GetComponent<DoorScript>(), spawnedDoor2.GetComponent<DoorScript>(), room);
         }
         else
         {
-            spawnedDoor1 = Instantiate(roomLinker, room.doorSpawnPointLinks[(int)DOOR_SPAWN_MIDDLE.XY1]);
-            spawnedDoor2 = Instantiate(roomLinker, room.doorSpawnPointLinks[(int)DOOR_SPAWN_MIDDLE.XY2]);
+            spawnedDoor1 = Instantiate(roomLinker, room.doorSpawnPointLinks[(int)DOOR_SPAWN_MIDDLE.XY1].position, room.doorSpawnPointLinks[(int)DOOR_SPAWN_MIDDLE.XY1].rotation, room.doorSpawnPointLinks[(int)DOOR_SPAWN_MIDDLE.XY1]);
+            spawnedDoor2 = Instantiate(roomLinker, room.doorSpawnPointLinks[(int)DOOR_SPAWN_MIDDLE.XY2].position, room.doorSpawnPointLinks[(int)DOOR_SPAWN_MIDDLE.XY1].rotation, room.doorSpawnPointLinks[(int)DOOR_SPAWN_MIDDLE.XY2]);
             LinkDoors (spawnedDoor1.GetComponent<DoorScript>(), spawnedDoor2.GetComponent<DoorScript>(), room);
         }
     }

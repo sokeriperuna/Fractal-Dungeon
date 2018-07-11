@@ -40,7 +40,7 @@ public class GameController : MonoBehaviour {
 
     private void StartGame()
     {
-        
+
     }
 
     private void OnPlayerScaleChange()

@@ -13,8 +13,9 @@ public class CameraController : MonoBehaviour
 
     private float    lastOrthographicSize;
     private float currentOrthographicSize;
-    private float lerpProgress = 0f;
+    private float lerpProgress = 1f;
 
+    public float defaultOrthographicSize;
     public float cameraSpeed = 10f;
 
     private void Awake()
@@ -28,6 +29,7 @@ public class CameraController : MonoBehaviour
     {
         lastPosition         = transform.position;
         lastOrthographicSize = camera.orthographicSize;
+        lerpProgress = 1f;
     }
 
     private void LateUpdate()
@@ -44,8 +46,8 @@ public class CameraController : MonoBehaviour
             if (lerpProgress > 1f)
                 lerpProgress = 1f;
 
-            Vector3 lerpVector = Vector3.Lerp(lastPosition, targetPosition, lerpProgress);
-            transform.position = new Vector3(lerpVector.x, lerpVector.y, -10f);
+            Vector3 lerpVector      = Vector3.Lerp(lastPosition, targetPosition, lerpProgress);
+            transform.position      = new Vector3(lerpVector.x, lerpVector.y, -10f);
             camera.orthographicSize = Mathf.Lerp(lastOrthographicSize, currentOrthographicSize, lerpProgress);
         }
     }
@@ -58,7 +60,7 @@ public class CameraController : MonoBehaviour
 
         currentIteration = newIteration;
 
-        lastOrthographicSize = camera.orthographicSize;
-        currentOrthographicSize = 1.5f * Mathf.Pow(0.5f, currentIteration);
+        lastOrthographicSize    = camera.orthographicSize;
+        currentOrthographicSize = defaultOrthographicSize * Mathf.Pow(0.5f, currentIteration);
     }
 }
