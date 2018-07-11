@@ -6,23 +6,19 @@ public class DoorScript : MonoBehaviour {
 
     private DoorScript linkedDoor;
 
-    private Transform teleportDestination;
+    public Transform teleportDestination;
 
     private int doorIteration = 0;
-
+    
     public delegate void DoorDelegate();
-    public static event DoorDelegate PlayerDecent;
-    public static event DoorDelegate PlayerAscent;
-
-    private void Awake()
-    {
-        teleportDestination = transform.GetChild(0);
-    }
+    public static event  DoorDelegate PlayerDecent;
+    public static event  DoorDelegate PlayerAscent;
 
     public void InitializeDoor(DoorScript newLink, int iteration)
     {
-        linkedDoor    = newLink;
-        doorIteration = iteration;
+        linkedDoor          = newLink;
+        doorIteration       = iteration;
+        teleportDestination = newLink.transform.GetChild(0);
     }
 
     public int Iteration { get { return doorIteration; } }
@@ -33,9 +29,7 @@ public class DoorScript : MonoBehaviour {
     {
 
         if (other.CompareTag("Player"))
-        {
             other.transform.position = teleportDestination.position;
-        }
 
         if (linkedDoor.Iteration > this.Iteration)
             if (PlayerAscent != null)
