@@ -55,7 +55,7 @@ public class PlayerEntity : MonoBehaviour {
         double iterationScale  = RoomManager.GetIterationScale(newIteration);
         scaledSpeed = (float)(speed * iterationScale);
 
-        transform.localScale = new Vector3((float)iterationScale, (float)iterationScale, 1f);
+        transform.localScale = new Vector3((float)iterationScale * 4500f, (float)iterationScale * 4500f, 1f);
 
     }
 
