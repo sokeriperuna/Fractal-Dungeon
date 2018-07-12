@@ -205,7 +205,6 @@ public class RoomManager : MonoBehaviour {
 
     private void OnPlayerScaleChange()
     {
-        Debug.Log("Scale change camera: " + PlayerEntity.currentIteration.ToString());
         cameraController.UpdateTracking(existingRooms[PlayerEntity.currentIteration].transform, PlayerEntity.currentIteration);
     }
 

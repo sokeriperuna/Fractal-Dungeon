@@ -42,25 +42,13 @@ public class DoorScript : MonoBehaviour {
 
         if (doorAvailableNext <= Time.time && !playerHasTeleported)
         {
-            Debug.Log("Origin Door: " + this.doorIteration.ToString() + " Destination: " + linkedDoor.Iteration.ToString());
             if (this.doorIteration < linkedDoor.Iteration)
-            {
-                Debug.Log("Descent: ");
-
                 if (PlayerDescent != null)
-                {
                     PlayerDescent();
-                }
-            }
 
             if (this.doorIteration > linkedDoor.Iteration)
-            {
-                Debug.Log("Ascent");
                 if (PlayerAscent != null)
-                {
                     PlayerAscent();
-                }
-            }
 
 
 
