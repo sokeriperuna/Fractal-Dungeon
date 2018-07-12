@@ -16,15 +16,14 @@ public class PlayerController : MonoBehaviour
     {
         Vector2 input = GetInput();
 
-        if (Input.GetKeyDown(KeyCode.Space) && player.NextAttack <= Time.time)
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKey(KeyCode.Space))&& player.NextAttack <= Time.time)
             player.Attack();
         else
-        if (input != Vector2.zero)
+        if (input != Vector2.zero && player.NextAttack <= Time.time)
             player.Move(input);
         else
-        {
-            player.animator.Play(player.GetStandAnimationName(player.Facing));
-        }
+            if(!player.Attacking)
+                player.animator.Play(player.GetStandAnimationName(player.Facing));
     }
 
     private Vector2 GetInput()

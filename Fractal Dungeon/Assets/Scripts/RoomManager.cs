@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 public class RoomRefs
 {
@@ -166,12 +165,21 @@ public class RoomManager : MonoBehaviour {
         door2.InitializeDoor(door1, room2.data.iteration);
     }
 
+    private int FindTransformIndex(Transform[] array, Transform target)
+    {
+        for (int i = 0; i < array.Length; i++)
+            if (Object.ReferenceEquals(array[i], target))
+                return i;
+
+        return -1;
+    }
+
     private void LinkRooms(RoomRefs higherRoom, RoomRefs lowerRoom)
     {
         foreach (Transform i in higherRoom.doorSpawnPointExits)
             foreach(Transform j in i)
             {
-                int doorIndex = ArrayUtility.IndexOf<Transform>(higherRoom.doorSpawnPointExits, i);
+                int doorIndex = FindTransformIndex(higherRoom.doorSpawnPointExits, i);
                 GameObject k  = Instantiate(roomLinker, lowerRoom.doorSpawnPointEntrances[doorIndex].position, lowerRoom.doorSpawnPointEntrances[doorIndex].rotation, lowerRoom.doorSpawnPointEntrances[doorIndex]);
                 LinkDoors(j.GetComponent<DoorScript>(), k.GetComponent<DoorScript>(), higherRoom, lowerRoom);
             }

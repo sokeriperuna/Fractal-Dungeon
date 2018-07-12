@@ -12,22 +12,24 @@ public enum PLAYER_ATTACK_TYPE
     MELEE
 };
 
+[RequireComponent(typeof(AudioSource))]
 public class PlayerEntity : MonoBehaviour {
 
     private Rigidbody2D rb2D;
 
-    public Animator animator;
+    private AudioSource audio;
 
-    private WeaponCollisionSurveyor weaponCollisionSurveyor;
+    public Animator animator;
 
     private Collider2D[] playerAttackColliders = new Collider2D[4];
 
     private PLAYER_DIRECTION facingDirection = PLAYER_DIRECTION.DOWN;
 
     private float scaledSpeed;
-    private float nextAttack;
+    private float nextAttack    = 0;
+    private float firstFrameEnd = 0;
 
-    private int attackAnimationFramesLeft = 0;
+    private SpriteRenderer spriteRenderer;
 
     private bool isAttacking = false;
 
@@ -35,57 +37,51 @@ public class PlayerEntity : MonoBehaviour {
 
     public float attackCooldown = 0.1f;
 
+    public float firstFrameDuration = 0.5f;
+
     public int attackDamage = 1;
 
-    public int attackAnimationFrames = 1;
+    public AudioClip slash;
 
     public static int currentIteration;
 
     public delegate void PlayerDelegate();
-    public static event PlayerDelegate PlayerScaleIncrement;
-    public static event PlayerDelegate PlayerScaleDecrement;
+    public static event  PlayerDelegate PlayerScaleIncrement;
+    public static event  PlayerDelegate PlayerScaleDecrement;
+
 
     private void Awake()
     {
-        rb2D = GetComponent<Rigidbody2D>();
-
-        /*Transform weaponColliders = transform.GetChild(0);
-        weaponCollisionSurveyor   = weaponColliders.GetComponent <WeaponCollisionSurveyor>();
-        playerAttackColliders     = weaponColliders.GetComponents<Collider2D>();*/
-
-        animator = GetComponent<Animator>();
+        rb2D     = GetComponent<Rigidbody2D>();
+        audio    = GetComponent<AudioSource>();
+        animator = GetComponent<Animator>   ();
 
         currentIteration = 0;
         scaledSpeed      = speed;
-        DoorScript.PlayerAscent              += OnPlayerAscent;
-        DoorScript.PlayerDescent             += OnPlayerDescent;
-        //weaponCollisionSurveyor.EnemyDetect  += OnAttackHit;
+        DoorScript.PlayerAscent  += OnPlayerAscent;
+        DoorScript.PlayerDescent += OnPlayerDescent;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-
-        if (isAttacking)
+        if(isAttacking)
         {
-            if (attackAnimationFramesLeft > 0)
-            {
-                --attackAnimationFramesLeft;
-                Debug.Log("Frames left: " + attackAnimationFramesLeft.ToString());
-            }            
+            if (nextAttack <= Time.time)
+                isAttacking = false;
             else
             {
-                Debug.Log("isAttacking set to false");
-                isAttacking = false;
+                if (firstFrameEnd <= Time.time)
+                    animator.Play(GetAttackFrameNames(this.Facing, true));
+                else
+                    animator.Play(GetAttackFrameNames(this.Facing, false));
             }
-
-
         }
-
     }
 
     private void Start()
     {
         currentIteration = 0;
+        nextAttack = 0f;
     }
 
     private PLAYER_DIRECTION GetDirection(Vector2 vector)
@@ -104,11 +100,6 @@ public class PlayerEntity : MonoBehaviour {
 
         Debug.LogError("Incorrect vector input");
         return PLAYER_DIRECTION.DOWN;
-    }
-
-    private void OnAttackHit()
-    {
-        animator.Play(GetAttackAnimationName(this.facingDirection));
     }
 
     private string GetWalkAnimationName(PLAYER_DIRECTION dir)
@@ -210,16 +201,69 @@ public class PlayerEntity : MonoBehaviour {
     {
         facingDirection = GetDirection(input);
 
-        animator.Play(GetWalkAnimationName(facingDirection));
+        if (!this.Attacking)
+        {
+            animator.Play(GetWalkAnimationName(facingDirection));
+            rb2D.MovePosition(rb2D.position + input.normalized * Time.fixedDeltaTime * scaledSpeed);
+        }
 
-        rb2D.MovePosition(rb2D.position + input.normalized * Time.fixedDeltaTime * scaledSpeed);
+    }
+
+    private string GetAttackFrameNames(PLAYER_DIRECTION dir, bool firstFrame)
+    {
+        if (!firstFrame)
+        {
+            switch (dir)
+            {
+                case PLAYER_DIRECTION.DOWN:
+                    return "yui_attack_down_0";
+
+                case PLAYER_DIRECTION.LEFT:
+                    return "yui_attack_left_0";
+
+                case PLAYER_DIRECTION.RIGHT:
+                    return "yui_attack_right_0";
+
+                case PLAYER_DIRECTION.UP:
+                    return "yui_attack_up_0";
+
+                default:
+
+                    return "yui_stand_down";
+            }
+        }
+        else
+        {
+            switch (dir)
+            {
+                case PLAYER_DIRECTION.DOWN:
+                    return "yui_attack_down_1";
+
+                case PLAYER_DIRECTION.LEFT:
+                    return "yui_attack_left_1";
+
+                case PLAYER_DIRECTION.RIGHT:
+                    return "yui_attack_right_1";
+
+                case PLAYER_DIRECTION.UP:
+                    return "yui_attack_up_1";
+
+                default:
+
+                    return "yui_stand_down";
+            }
+        }
+
     }
 
     public void Attack()
     {
-        Debug.Log("Attack!");
-        isAttacking = true;
-        attackAnimationFramesLeft = attackAnimationFrames;
+        audio.clip = slash;
+        audio.Play();
+
+        isAttacking   = true;
+        firstFrameEnd = (attackCooldown * firstFrameDuration) + Time.time;
+        nextAttack    =  attackCooldown + Time.time;
     }
 
     public float NextAttack        { get { return nextAttack;  } }
