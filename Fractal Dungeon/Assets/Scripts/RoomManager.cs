@@ -33,6 +33,8 @@ public struct RoomData
 
 public class RoomManager : MonoBehaviour {
 
+    private int deepestIterationVisited = 3;
+
     public GameObject roomPrefab;
     public GameObject roomLinker;
 
@@ -213,6 +215,12 @@ public class RoomManager : MonoBehaviour {
 
     private void OnPlayerScaleChange()
     {
+        if (deepestIterationVisited < PlayerEntity.currentIteration)
+        {
+            deepestIterationVisited = PlayerEntity.currentIteration;
+            SpawnNewRoom(existingRooms.Count - 1);
+        }
+
         cameraController.UpdateTracking(existingRooms[PlayerEntity.currentIteration].transform, PlayerEntity.currentIteration);
     }
 
