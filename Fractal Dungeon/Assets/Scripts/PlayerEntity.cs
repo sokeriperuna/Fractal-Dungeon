@@ -32,16 +32,18 @@ public class PlayerEntity : MonoBehaviour {
 
     void OnPlayerAscent()
     {
-        UpdatePlayerScale(currentIteration + 1, true);
+        UpdatePlayerScale(currentIteration - 1, true);
     }
 
     void OnPlayerDescent()
     {
-        UpdatePlayerScale(currentIteration - 1, false);
+        UpdatePlayerScale(currentIteration + 1, false);
     }
 
     public void UpdatePlayerScale(int newIteration, bool incremented)
     {
+        currentIteration = newIteration;
+
         if (incremented)
             if (PlayerScaleIncrement != null)
                 PlayerScaleIncrement();
@@ -50,8 +52,6 @@ public class PlayerEntity : MonoBehaviour {
             if (PlayerScaleDecrement != null)
                 PlayerScaleDecrement();
 
-
-        currentIteration       = newIteration;
         double iterationScale  = RoomManager.GetIterationScale(newIteration);
         scaledSpeed = (float)(speed * iterationScale);
 

@@ -8,7 +8,7 @@ public class DoorScript : MonoBehaviour {
 
     private Transform teleportDestination;
 
-    private int doorIteration = 0;
+    public int doorIteration = 0;
 
     private static bool playerHasTeleported = false;
     
@@ -42,19 +42,23 @@ public class DoorScript : MonoBehaviour {
 
         if (doorAvailableNext <= Time.time && !playerHasTeleported)
         {
-            if (linkedDoor.Iteration > this.Iteration)
+            Debug.Log("Origin Door: " + this.doorIteration.ToString() + " Destination: " + linkedDoor.Iteration.ToString());
+            if (this.doorIteration < linkedDoor.Iteration)
             {
-                if (PlayerAscent != null)
-                {
-                    PlayerAscent();
-                }
-            }
+                Debug.Log("Descent: ");
 
-            if (linkedDoor.Iteration < this.Iteration)
-            {
                 if (PlayerDescent != null)
                 {
                     PlayerDescent();
+                }
+            }
+
+            if (this.doorIteration > linkedDoor.Iteration)
+            {
+                Debug.Log("Ascent");
+                if (PlayerAscent != null)
+                {
+                    PlayerAscent();
                 }
             }
 
