@@ -293,7 +293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultOrthographicSize: 13500
-  cameraSpeed: 0.75
+  cameraSpeed: 1
 --- !u!1 &1213319318
 GameObject:
   m_ObjectHideFlags: 0
