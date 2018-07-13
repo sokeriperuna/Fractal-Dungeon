@@ -33,17 +33,25 @@ public class PlayerEntity : MonoBehaviour {
 
     private bool isAttacking = false;
 
+    private int hitpoints;
+
     public float speed;
 
     public float attackCooldown = 0.1f;
 
     public float firstFrameDuration = 0.5f;
 
-    public int attackDamage = 1;
+    public int startingHitpoints;
+
+    public float attackRange  = 0.5f;
+
+    public int attackDamage   = 1;
 
     public AudioClip slash;
 
     public static int currentIteration;
+
+    public static Vector3 playerPosition;
 
     public delegate void PlayerDelegate();
     public static event  PlayerDelegate PlayerScaleIncrement;
@@ -64,6 +72,8 @@ public class PlayerEntity : MonoBehaviour {
 
     private void Update()
     {
+        playerPosition = transform.position;
+
         if(isAttacking)
         {
             if (nextAttack <= Time.time)
@@ -80,6 +90,7 @@ public class PlayerEntity : MonoBehaviour {
 
     private void Start()
     {
+        hitpoints = startingHitpoints;
         currentIteration = 0;
         nextAttack = 0f;
     }
@@ -256,14 +267,64 @@ public class PlayerEntity : MonoBehaviour {
 
     }
 
+    private void Die()
+    {
+        Destroy(this.gameObject);
+    }
+
+    private Vector2 GetVector(PLAYER_DIRECTION dir)
+    {
+        switch (dir)
+        {
+            case PLAYER_DIRECTION.DOWN:
+                return Vector2.down;
+
+            case PLAYER_DIRECTION.LEFT:
+                return Vector2.left;
+
+            case PLAYER_DIRECTION.RIGHT:
+                return Vector2.right;
+
+            case PLAYER_DIRECTION.UP:
+                return Vector2.up;
+
+            default:
+
+                return Vector2.zero;
+        }
+    }
+
     public void Attack()
     {
         audio.clip = slash;
         audio.Play();
 
+        Vector2 direction = GetVector(facingDirection);
+        Vector2 origin = (Vector2)transform.position + transform.localScale.x * 0.2f * direction;
+
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction, attackRange * (float)RoomManager.GetIterationScale(currentIteration));
+
+        Debug.DrawRay(origin, direction, Color.red, 1f / 60f);
+
+        if (hit.collider != null)
+            if (hit.collider.CompareTag("Enemy"))
+                hit.collider.GetComponent<EnemyEntity>().TakeDamage(attackDamage);
+
+            
+
+
         isAttacking   = true;
         firstFrameEnd = (attackCooldown * firstFrameDuration) + Time.time;
         nextAttack    =  attackCooldown + Time.time;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        hitpoints -= damage;
+        if (hitpoints <= 0)
+            Die();
+
+        Debug.Log("Hitpoints left: " + hitpoints.ToString());
     }
 
     public float NextAttack        { get { return nextAttack;  } }

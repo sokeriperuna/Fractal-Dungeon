@@ -35,6 +35,8 @@ public class RoomManager : MonoBehaviour {
 
     private int deepestIterationVisited = 3;
 
+    public GameObject enemyPrefab;
+
     public GameObject roomPrefab;
     public GameObject roomLinker;
 
